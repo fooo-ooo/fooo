@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FOOO — Agent Crew</title>
+  <meta name="description" content="FOOO Agent Crew — autonomous agents built on OpenClaw." />
+  <style>
+    /* ── Fonts ── */
+    @font-face {
+      font-family: 'GeistPixel';
+      src: url('https://unpkg.com/geist@1.7.0/dist/fonts/geist-pixel/GeistPixel-Square.woff2') format('woff2');
+      font-display: swap;
+    }
+
+    /* ── Reset & Base ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:        #f5f3ef;
+      --bg-card:   #ffffff;
+      --green:     #1a8a4a;
+      --green-light:#e6f5ec;
+      --green-pale:#d0edda;
+      --text:      #2c2c2c;
+      --text-dim:  #6b6b6b;
+      --border:    #c8c4bc;
+      --pixel:     'GeistPixel', 'Courier New', monospace;
+      --mono:      'Courier New', Courier, monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 72px 0;
+    }
+
+    /* ── Pixel border utility ── */
+    .pixel-box {
+      border: 2px solid var(--border);
+      box-shadow: 3px 3px 0 var(--border);
+      background: var(--bg-card);
+      padding: 24px;
+      transition: box-shadow .2s, border-color .2s;
+    }
+
+    .pixel-box:hover {
+      border-color: var(--green);
+      box-shadow: 3px 3px 0 var(--green);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-family: var(--pixel);
+      font-size: clamp(36px, 7vw, 72px);
+      color: var(--green);
+      letter-spacing: 3px;
+      line-height: 1.15;
+    }
+
+    .hero h1 .cursor {
+      display: inline-block;
+      width: .5em;
+      height: .85em;
+      background: var(--green);
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0; }
+    }
+
+    .hero-tagline {
+      margin-top: 24px;
+      font-size: 17px;
+      color: var(--text-dim);
+      max-width: 500px;
+      line-height: 1.8;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 36px;
+      font-family: var(--pixel);
+      font-size: 11px;
+      color: var(--border);
+      animation: float 2.5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(6px); }
+    }
+
+    /* ── Section titles ── */
+    .section-title {
+      font-family: var(--pixel);
+      font-size: 24px;
+      color: var(--green);
+      margin-bottom: 28px;
+    }
+
+    .section-title::before {
+      content: '# ';
+      color: var(--border);
+    }
+
+    /* ── Agents showcase ── */
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .agent-card {
+      position: relative;
+    }
+
+    .agent-id {
+      font-family: var(--pixel);
+      font-size: 32px;
+      color: var(--green);
+    }
+
+    .agent-name {
+      font-family: var(--pixel);
+      font-size: 15px;
+      color: var(--text);
+      margin: 6px 0 4px;
+    }
+
+    .agent-domain {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .agent-status {
+      display: inline-block;
+      margin-top: 12px;
+      font-family: var(--pixel);
+      font-size: 11px;
+      padding: 2px 10px;
+      border: 1px solid;
+    }
+
+    .status-online  { color: #1a8a4a; border-color: #1a8a4a; background: #e6f5ec; }
+    .status-pending { color: #b8860b; border-color: #b8860b; background: #fdf6e3; }
+    .status-offline { color: #999;    border-color: #ccc;    background: #f5f5f5; }
+
+    /* pixel dot decoration on cards */
+    .agent-card::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 4px;
+      height: 4px;
+      background: var(--green-pale);
+      box-shadow:
+        6px 0 0 var(--green-pale),
+        0 6px 0 var(--green-pale);
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 2px solid var(--border);
+      padding: 36px 0;
+      text-align: center;
+    }
+
+    footer .contact-link {
+      font-family: var(--pixel);
+      font-size: 16px;
+      color: var(--green);
+      text-decoration: none;
+      border-bottom: 2px solid var(--green-pale);
+      padding-bottom: 2px;
+      transition: border-color .2s;
+    }
+
+    footer .contact-link:hover {
+      border-color: var(--green);
+    }
+
+    footer .copy {
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--border);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      section { padding: 48px 0; }
+      .pixel-box { padding: 16px; }
+      .agents-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <section class="hero">
+    <h1>FOOO<br>AGENT CREW<span class="cursor" aria-hidden="true"></span></h1>
+    <p class="hero-tagline">Building agents on OpenClaw — one by one, each with a name, a number, and a home.</p>
+    <div class="hero-scroll">[ scroll down ]</div>
+  </section>
+
+  <!-- ═══════════ AGENTS ═══════════ -->
+  <section id="agents">
+    <div class="container">
+      <h2 class="section-title">Agents</h2>
+      <div class="agents-grid">
+
+        <div class="agent-card pixel-box">
+          <div class="agent-id">001</div>
+          <div class="agent-name">GENESIS</div>
+          <div class="agent-domain">001.fooo.ooo</div>
+          <span class="agent-status status-online">ONLINE</span>
+        </div>
+
+        <div class="agent-card pixel-box">
+          <div class="agent-id">002</div>
+          <div class="agent-name">ECHO</div>
+          <div class="agent-domain">002.fooo.ooo</div>
+          <span class="agent-status status-online">ONLINE</span>
+        </div>
+
+        <div class="agent-card pixel-box">
+          <div class="agent-id">003</div>
+          <div class="agent-name">CIPHER</div>
+          <div class="agent-domain">003.fooo.ooo</div>
+          <span class="agent-status status-pending">PENDING</span>
+        </div>
+
+        <div class="agent-card pixel-box">
+          <div class="agent-id">???</div>
+          <div class="agent-name">NEXT RECRUIT</div>
+          <div class="agent-domain">???.fooo.ooo</div>
+          <span class="agent-status status-offline">AWAITING</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer>
+    <div class="container">
+      <a class="contact-link" href="https://x.com/fifteen42_" target="_blank" rel="noopener">
+        X: @fifteen42_
+      </a>
+      <p class="copy">&copy; <span id="year"></span> FOOO AGENT CREW</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const tagline = document.querySelector('.hero-tagline');
+      if (!tagline) return;
+      const text = tagline.textContent;
+      tagline.textContent = '';
+      tagline.style.visibility = 'visible';
+      let i = 0;
+      (function type() {
+        if (i <= text.length) {
+          tagline.textContent = text.slice(0, i);
+          i++;
+          setTimeout(type, 28);
+        }
+      })();
+    });
+  </script>
+</body>
+</html>
